@@ -7,10 +7,11 @@ enum ConnectionStatusE {
   CONNECTED,
 }
 
-const DEFAULT_ADDRESS = 'wss://s1.ripple.com/';
-
+const DEFAULT_ADDRESS = 'wss://s.altnet.rippletest.net:51233';
 class Client {
   private static messageId = 1;
+
+  private mQueryMap: Map<number, string>;
 
   private mSocket: WebSocket;
 
@@ -22,6 +23,7 @@ class Client {
     this.mSocket = new WebSocket(DEFAULT_ADDRESS);
     this.mConnectionStatus = ConnectionStatusE.ONGOIING;
     this.mStore = store;
+    this.mQueryMap = new Map();
     console.log('init mSocket');
     this.mSocket.addEventListener('open', (event) => {
       console.log('[XRP_DEBUG] Socket connected', event);
@@ -35,47 +37,65 @@ class Client {
 
     this.mSocket.addEventListener('message', (event) => {
       const parsedData = JSON.parse(event.data);
+      console.log('jajo - account_info', parsedData);
       console.log('[XRP_DEBUG] Socket message', parsedData);
-      switch (parsedData.request.command) {
-        case 'account_info': {
-          if (parsedData.status !== 'error') {
-            let accountsSlice = this.mStore.getState().accounts.slice();
-            accountsSlice.find((element, index, array) => {
-              if (element.classicAddress === parsedData.account) {
-                array[index].balance = 1;
-                return true;
-              }
-              return false;
-            });
+      if (parsedData.status === 'success') {
+        if (this.mQueryMap.has(parsedData.id)) {
+          const method = this.mQueryMap.get(parsedData.id);
+          switch (method) {
+            case 'account_info': {
+              let accountsSlice = this.mStore.getState().accounts.slice();
+              const accountReceived = parsedData.result.account_data.Account;
+              accountsSlice.find((element, index, array) => {
+                if (element.classicAddress === accountReceived) {
+                  array[index].balance = parsedData.result.account_data.Balance;
+                  return true;
+                }
+                return false;
+              });
 
-            this.mStore.dispatch({
-              type: 'SET_ACCOUNTS',
-              payload: accountsSlice,
-            });
-          } else if (
-            parsedData.status === 'error' &&
-            parsedData.error === 'actNotFound'
-          ) {
-            let accountsSlice = this.mStore.getState().accounts.slice();
-            accountsSlice.find((element, index, array) => {
-              if (element.classicAddress === parsedData.account) {
-                array[index].balance = -1;
-                return true;
-              }
-              return false;
-            });
+              this.mStore.dispatch({
+                type: 'SET_ACCOUNTS',
+                payload: accountsSlice,
+              });
+              break;
+            }
 
-            this.mStore.dispatch({
-              type: 'SET_ACCOUNTS',
-              payload: accountsSlice,
-            });
+            default: {
+              break;
+            }
           }
-          break;
+          this.mQueryMap.delete(parsedData.id);
         }
+      } else {
+        switch (parsedData.request.command) {
+          case 'account_info': {
+            if (
+              parsedData.status === 'error' &&
+              parsedData.error === 'actNotFound'
+            ) {
+              let accountsSlice = this.mStore.getState().accounts.slice();
+              accountsSlice.find((element, index, array) => {
+                if (element.classicAddress === parsedData.account) {
+                  array[index].balance = -1;
+                  return true;
+                }
+                return false;
+              });
 
-        default: {
-          break;
+              this.mStore.dispatch({
+                type: 'SET_ACCOUNTS',
+                payload: accountsSlice,
+              });
+            }
+            break;
+          }
+
+          default: {
+            break;
+          }
         }
+        this.mQueryMap.delete(parsedData.id);
       }
     });
 
@@ -105,7 +125,7 @@ class Client {
       ledger_index: 'current',
       queue: true,
     };
-
+    this.mQueryMap.set(request.id, request.command);
     this.send(JSON.stringify(request));
   }
 }

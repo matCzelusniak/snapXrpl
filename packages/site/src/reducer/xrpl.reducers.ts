@@ -1,3 +1,5 @@
+//todo matCzelusniak.
+// Change accounts to map<string, AccountData> later. Much more faster to read data
 export default function XrplReducer(
   state = {
     accounts: [],

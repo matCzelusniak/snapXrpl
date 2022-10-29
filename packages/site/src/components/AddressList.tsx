@@ -31,6 +31,18 @@ export default function AddressList(props: { accounts: string[] }) {
     setOpen(true);
   };
 
+  const handleSubmit = () => {
+    switch (transactionType) {
+      case SEND_XRPL: {
+        break;
+      }
+
+      default: {
+        break;
+      }
+    }
+  };
+
   const handleClose = (
     event: React.SyntheticEvent<unknown>,
     reason?: string,
