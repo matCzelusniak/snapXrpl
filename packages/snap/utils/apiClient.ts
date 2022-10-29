@@ -51,18 +51,19 @@ class Client {
     Client.messageId += 1;
   }
 
-  public async getBalance(address: string) {
-    const request = {
-      id: Client.messageId,
-      command: 'account_info',
-      account: address,
-      strict: true,
-      ledger_index: 'current',
-      queue: true,
-    };
+  //todo matCzelusniak weboscket not supported by snaps at all
+  // public async getBalance(address: string) {
+  //   const request = {
+  //     id: Client.messageId,
+  //     command: 'account_info',
+  //     account: address,
+  //     strict: true,
+  //     ledger_index: 'current',
+  //     queue: true,
+  //   };
 
-    this.send(JSON.stringify(request));
-  }
+  //   this.send(JSON.stringify(request));
+  // }
 }
 
 export default class ApiClient {

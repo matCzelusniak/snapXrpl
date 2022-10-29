@@ -3,6 +3,7 @@ import { useContext, useState } from 'react';
 import styled from 'styled-components';
 import { MetamaskActions, MetaMaskContext } from '../hooks';
 import { useDispatch, useSelector } from 'react-redux';
+import TextField from '@mui/material/TextField';
 
 import {
   connectSnap,
@@ -16,6 +17,7 @@ import {
   InstallFlaskButton,
   ReconnectButton,
   CreateXRPAccountButton,
+  CreateXRPAccountButtonBasedOnSeed,
   Card,
 } from '../components';
 
@@ -110,6 +112,8 @@ const Index = () => {
   const [state, dispatchMetamask] = useContext(MetaMaskContext);
   const dispatch = useDispatch();
   const xrplData = useSelector((state) => state);
+  const [seed, setSeed] = useState('');
+
   console.log('xrplData', xrplData);
   ApiClient.initApi();
   const handleConnectClick = async () => {
@@ -160,6 +164,29 @@ const Index = () => {
 
   const handleCreateAccount = async () => {
     await createXRPAccount();
+    const accounts = await getXRPAccountsAddresses();
+    console.log('jajo accounts upd', accounts);
+
+    let accountsData = [];
+    for (let account of accounts) {
+      accountsData.push({
+        classicAddress: account,
+        balance: 0,
+      });
+
+      try {
+        ApiClient.getApi().getBalance(account);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+
+    //console.log('jajo accounts upd', accounts);
+    dispatch({ type: 'SET_ACCOUNTS', payload: accountsData });
+  };
+
+  const handleCreateAccountBasedOnSeed = async (seed) => {
+    await createXRPAccountBasedOnSeed(seed);
     const accounts = await getXRPAccountsAddresses();
     console.log('jajo accounts upd', accounts);
 
@@ -235,7 +262,7 @@ const Index = () => {
         {state.snapId && (
           <Card
             content={{
-              title: 'createXRPAccount',
+              title: 'create XRPL Account',
               description:
                 'Display a custom message within a confirmation screen in MetaMask.',
               button: (
@@ -243,6 +270,33 @@ const Index = () => {
                   onClick={handleCreateAccount}
                   disabled={false}
                 />
+              ),
+            }}
+            disabled={false}
+            fullWidth={false}
+          />
+        )}
+        {state.snapId && (
+          <Card
+            content={{
+              title: 'upload XRPL Account',
+              description:
+                'Display a custom message within a confirmation screen in MetaMask.',
+              button: (
+                <>
+                  <CreateXRPAccountButtonBasedOnSeed
+                    onClick={handleCreateAccountBasedOnSeed}
+                    disabled={false}
+                  />
+                  <p></p>
+                  <TextField
+                    id="outlined-basic"
+                    label="Seed"
+                    variant="outlined"
+                    value={seed}
+                    onChange={(e) => setSeed(e.target.value)}
+                  />
+                </>
               ),
             }}
             disabled={false}

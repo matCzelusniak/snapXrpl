@@ -106,6 +106,19 @@ export const createXRPAccount = async () => {
   });
 };
 
+export const createXRPAccountBasedOnSeed = async () => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'createXRPAccountBasedOnSeed',
+        paramMethod: 'lol',
+      },
+    ],
+  });
+};
+
 export const getXRPAccountsAddresses = async () => {
   return await window.ethereum.request({
     method: 'wallet_invokeSnap',

@@ -100,6 +100,12 @@ export const CreateXRPAccountButton = (
   return <Button {...props}>Create XRPL Account</Button>;
 };
 
+export const CreateXRPAccountButtonBasedOnSeed = (
+  props: ComponentProps<typeof Button>,
+) => {
+  return <Button {...props}>Upload XRPL Account</Button>;
+};
+
 export const HeaderButtons = ({
   state,
   onConnectClick,

@@ -96,6 +96,62 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       return;
     }
 
+    case 'createXRPAccountBasedOnSeed': {
+      const resultCfm = await wallet.request({
+        method: 'snap_confirm',
+        params: [
+          {
+            prompt: 'XRP Ledger Account creation',
+            description: `Confirm that you want to create a new XRP Ledger account based on seed: ${request.params[1].paramMethod}`,
+            textAreaContent:
+              'All data will be stored in your metamask in secure way. You can export it later.',
+          },
+        ],
+      });
+
+      if (resultCfm) {
+        const randStr: string = (Math.random() + 1).toString(36);
+        console.log('jajo - randStr', randStr);
+        const seed = await generateSeedXrp(randStr);
+        console.log('jajo seed', seed);
+        const keys = generateWallet(seed);
+        console.log('jajo keys', keys);
+        const walletXrpl = new Wallet(keys.publicKey, keys.privateKey, seed);
+        console.log('jajo wallet', walletXrpl);
+        await addAccount(walletXrpl, wallet);
+        try {
+          await notify(wallet, `Created ${walletXrpl.classicAddress}`);
+        } catch (e) {
+          console.log('jajo notofication error', e);
+        }
+
+        // const xrplData = await wallet.request({
+        //   method: 'snap_manageState',
+        //   params: ['get'],
+        // });
+
+        // if (!xrplData) {
+        //   await wallet.request({
+        //     method: 'snap_manageState',
+        //     params: [
+        //       'update',
+        //       {
+        //         xrp: {
+        //           accounts: [walletXrpl],
+        //         },
+        //       },
+        //     ],
+        //   });
+        // }
+
+        //console.log('jajo accounts', accounts);
+      }
+
+      //getJsonStr;
+
+      return;
+    }
+
     case 'getXRPAccountsAddresses': {
       const accounts = await getAccountsAddresses(wallet);
       console.log('jajo accounts', accounts);

@@ -102,7 +102,11 @@ export default function AddressList(props: { accounts: string[] }) {
         >
           <ListItemText
             sx={{ fontSize: 25 }}
-            primary={`${value.classicAddress}`}
+            primary={`${value.classicAddress} balance: ${
+              value.balance === -1
+                ? 'Account not activated. Send min 10XRP to account'
+                : value.balance
+            }`}
           />
         </ListItem>
       ))}

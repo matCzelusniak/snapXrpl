@@ -16,9 +16,12 @@ class Client {
 
   private mConnectionStatus: ConnectionStatusE;
 
-  public constructor() {
+  private mStore;
+
+  public constructor(store) {
     this.mSocket = new WebSocket(DEFAULT_ADDRESS);
     this.mConnectionStatus = ConnectionStatusE.ONGOIING;
+    this.mStore = store;
     console.log('init mSocket');
     this.mSocket.addEventListener('open', (event) => {
       console.log('[XRP_DEBUG] Socket connected', event);
@@ -31,9 +34,49 @@ class Client {
     });
 
     this.mSocket.addEventListener('message', (event) => {
-      console.log('[XRP_DEBUG] Socket message', JSON.parse(event.data));
+      const parsedData = JSON.parse(event.data);
+      console.log('[XRP_DEBUG] Socket message', parsedData);
+      switch (parsedData.request.command) {
+        case 'account_info': {
+          if (parsedData.status !== 'error') {
+            let accountsSlice = this.mStore.getState().accounts.slice();
+            accountsSlice.find((element, index, array) => {
+              if (element.classicAddress === parsedData.account) {
+                array[index].balance = 1;
+                return true;
+              }
+              return false;
+            });
 
-      r3zmi6PcvbQk5ZQc9uREaYKRnkPcV7Fyxn;
+            this.mStore.dispatch({
+              type: 'SET_ACCOUNTS',
+              payload: accountsSlice,
+            });
+          } else if (
+            parsedData.status === 'error' &&
+            parsedData.error === 'actNotFound'
+          ) {
+            let accountsSlice = this.mStore.getState().accounts.slice();
+            accountsSlice.find((element, index, array) => {
+              if (element.classicAddress === parsedData.account) {
+                array[index].balance = -1;
+                return true;
+              }
+              return false;
+            });
+
+            this.mStore.dispatch({
+              type: 'SET_ACCOUNTS',
+              payload: accountsSlice,
+            });
+          }
+          break;
+        }
+
+        default: {
+          break;
+        }
+      }
     });
 
     this.mSocket.addEventListener('error', (event) => {
@@ -70,16 +113,22 @@ class Client {
 export default class ApiClient {
   private static mClientInstance: Client | null = null;
 
+  private static mStore = null;
+
   public static initApi() {
     if (ApiClient.mClientInstance === null) {
-      ApiClient.mClientInstance = new Client();
+      ApiClient.mClientInstance = new Client(ApiClient.mStore);
     }
   }
 
   public static getApi(): Client {
     if (ApiClient.mClientInstance === null) {
-      ApiClient.mClientInstance = new Client();
+      ApiClient.mClientInstance = new Client(ApiClient.mStore);
     }
     return ApiClient.mClientInstance;
+  }
+
+  public static setStore(store) {
+    ApiClient.mStore = store;
   }
 }

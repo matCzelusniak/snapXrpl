@@ -9,6 +9,7 @@ import { ToggleThemeContext } from './Root';
 import { Provider } from 'react-redux';
 import { createStore } from 'redux';
 import XrplReducer from './reducer/xrpl.reducers';
+import ApiClient from './utils/apiClient';
 
 const Wrapper = styled.div`
   display: flex;
@@ -25,6 +26,7 @@ export type AppProps = {
 export const App: FunctionComponent<AppProps> = ({ children }) => {
   const toggleTheme = useContext(ToggleThemeContext);
   const store = createStore(XrplReducer);
+  ApiClient.setStore(store);
   return (
     <Provider store={store}>
       <GlobalStyle />
