@@ -12,7 +12,7 @@ import {
   getXRPAccountsAddresses,
   shouldDisplayReconnectButton,
   createXRPAccountBasedOnSeed,
-  createXRPAccountBasedOnSecret,
+  signTransactionsOffline,
 } from '../utils';
 import {
   ConnectButton,
@@ -20,7 +20,6 @@ import {
   ReconnectButton,
   CreateXRPAccountButton,
   CreateXRPAccountButtonBasedOnSeed,
-  CreateXRPAccountButtonBasedOnSecret,
   Card,
 } from '../components';
 
@@ -211,6 +210,10 @@ const Index = () => {
     dispatch({ type: 'SET_ACCOUNTS', payload: accountsData });
   };
 
+  const handleSignTransactionsOffline = async () => {
+    await signTransactionsOffline();
+  };
+
   // const handleCreateAccountBasedOnSecret = async () => {
   //   await createXRPAccountBasedOnSecret(secret);
   //   const accounts = await getXRPAccountsAddresses();
@@ -317,6 +320,33 @@ const Index = () => {
                 <>
                   <CreateXRPAccountButtonBasedOnSeed
                     onClick={handleCreateAccountBasedOnSeed}
+                    disabled={false}
+                  />
+                  <p></p>
+                  <TextField
+                    id="outlined-basic"
+                    label="Seed"
+                    variant="outlined"
+                    value={seed}
+                    onChange={(e) => setSeed(e.target.value)}
+                  />
+                </>
+              ),
+            }}
+            disabled={false}
+            fullWidth={false}
+          />
+        )}
+        {state.snapId && (
+          <Card
+            content={{
+              title: 'upload XRPL Account',
+              description:
+                'Upload existed XRPL account to metamask based on SEED. Use easy in Secure way',
+              button: (
+                <>
+                  <CreateXRPAccountButtonBasedOnSeed
+                    onClick={handleSignTransactionsOffline}
                     disabled={false}
                   />
                   <p></p>

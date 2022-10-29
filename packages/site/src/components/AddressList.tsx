@@ -15,12 +15,14 @@ import FormControl from '@mui/material/FormControl';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
+import { signTransactionsOffline } from '../utils';
 
 const SEND_XRPL = 'SEND_XRPL';
 
 export default function AddressList(props: { accounts: string[] }) {
   const [open, setOpen] = React.useState(false);
   const [transactionType, setTransactionType] = useState<string>(SEND_XRPL);
+  const [accountDestination, setAccountDestination] = useState<string>('');
 
   const handleChangeTransactionType = (event) => {
     console.log('jajo event', event.target.value);
@@ -31,9 +33,19 @@ export default function AddressList(props: { accounts: string[] }) {
     setOpen(true);
   };
 
-  const handleSubmit = () => {
+  //todo matCzelusniak move logic outside component
+  const handleSubmitTx = (accountSource: string) => {
     switch (transactionType) {
       case SEND_XRPL: {
+        const tx = {
+          TransactionType: 'Payment',
+          Account: accountSource,
+          Amount: '20',
+          Destination: accountDestination,
+        };
+        const txTstring = JSON.stringify(tx);
+        signTransactionsOffline;
+        console.log('jajo tx', tx);
         break;
       }
 
@@ -99,6 +111,10 @@ export default function AddressList(props: { accounts: string[] }) {
                           label="XRP classic address"
                           variant="outlined"
                           size="medium"
+                          value={accountDestination}
+                          onChange={(e) =>
+                            setAccountDestination(e.target.value)
+                          }
                         />
                       )}
                     </FormControl>
@@ -106,7 +122,13 @@ export default function AddressList(props: { accounts: string[] }) {
                 </DialogContent>
                 <DialogActions>
                   <Button onClick={handleClose}>Cancel</Button>
-                  <Button onClick={handleClose}>Ok</Button>
+                  <Button
+                    onClick={() => {
+                      handleSubmitTx(value.classicAddress);
+                    }}
+                  >
+                    Send
+                  </Button>
                 </DialogActions>
               </Dialog>
             </div>

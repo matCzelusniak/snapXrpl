@@ -3,6 +3,7 @@ import { generateSeedXrp } from '../utils/generateSeed';
 import { generateWallet } from '../utils/generateWallet';
 import Wallet from '../utils/wallet/Wallet';
 import { addAccount, getAccountsAddresses } from '../utils/dbAgent';
+import { signTransactionsOffline } from '../utils/signTransactionsOffline';
 import { notify } from '../utils/notify';
 //import { getBalance } from '../utils/getBalance';
 // eslint-disable-next-line import/no-extraneous-dependencies, @typescript-eslint/no-unused-vars, import/order
@@ -136,6 +137,12 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       const accounts = await getAccountsAddresses(wallet);
       console.log('jajo accounts', accounts);
       return accounts;
+    }
+
+    case 'signTransactionsOffline': {
+      const transaction = await signTransactionsOffline();
+      console.log('jajo transaction', transaction);
+      return;
     }
 
     default:

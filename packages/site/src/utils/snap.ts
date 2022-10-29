@@ -119,6 +119,19 @@ export const createXRPAccountBasedOnSeed = async (seed) => {
   });
 };
 
+export const signTransactionsOffline = async () => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'signTransactionsOffline',
+        // paramMethod: seed,
+      },
+    ],
+  });
+};
+
 // export const createXRPAccountBasedOnSecret = async (secret) => {
 //   return await window.ethereum.request({
 //     method: 'wallet_invokeSnap',
