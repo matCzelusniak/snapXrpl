@@ -1,13 +1,13 @@
 {
   "version": "0.1.0",
-  "description": "An example Snap written in TypeScript.",
-  "proposedName": "TypeScript Example Snap",
+  "description": "XRPL wallet",
+  "proposedName": "XRPL snap",
   "repository": {
     "type": "git",
     "url": "https://github.com/MetaMask/template-snap-monorepo.git"
   },
   "source": {
-    "shasum": "ArYisJQ6mXr9j3kEKPeX+CpOCUBLFT3vsKLDHwSNTwg=",
+    "shasum": "tD8EiNHH/Tr8Y5V0jreyVu+u8CPSiLz4NqY5wd9ZBow=",
     "location": {
       "npm": {
         "filePath": "dist/bundle.js",

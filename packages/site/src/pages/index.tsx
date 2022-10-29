@@ -1,6 +1,11 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import styled from 'styled-components';
-import { MetamaskActions, MetaMaskContext } from '../hooks';
+import {
+  MetamaskActions,
+  MetaMaskContext,
+  XrplActions,
+  XrplContext,
+} from '../hooks';
 import {
   connectSnap,
   getSnap,
@@ -17,6 +22,7 @@ import {
 } from '../components';
 
 import ApiClient from '../utils/apiClient';
+import AddressList from '../components/AddressList';
 
 const Container = styled.div`
   display: flex;
@@ -103,42 +109,55 @@ const ErrorMessage = styled.div`
 `;
 
 const Index = () => {
-  const [state, dispatch] = useContext(MetaMaskContext);
+  const [state, dispatchMetamask] = useContext(MetaMaskContext);
+  const [accountsXrpl, setAccountsXrpl] = useState([]);
 
   const handleConnectClick = async () => {
     try {
-      await connectSnap();
+      const snapId = await connectSnap();
+      console.log('jajo snap installed', snapId);
+      dispatchMetamask({
+        type: MetamaskActions.SetSnapId,
+        payload: snapId,
+      });
+
       const installedSnap = await getSnap();
 
-      dispatch({
+      dispatchMetamask({
         type: MetamaskActions.SetInstalled,
         payload: installedSnap,
       });
       ApiClient.initApi();
+      if (snapId) {
+        const accounts = await getXRPAccountsAddresses();
+        console.log('jajo accounts', accounts);
+        setAccountsXrpl(accounts);
+        // distapchXrpl({
+        //   type: XrplActions.SetAccounts,
+        //   payload: accounts,
+        // });
+      }
     } catch (e) {
       console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
+      dispatchMetamask({ type: MetamaskActions.SetError, payload: e });
     }
   };
 
-  const handleSendHelloClick = async () => {
-    try {
-      ApiClient.initApi();
-      const test = await createXRPAccount();
-      console.log('jajo test', test);
-    } catch (e) {
-      console.error(e);
-      dispatch({ type: MetamaskActions.SetError, payload: e });
-    }
+  const handleCreateAccount = async () => {
+    await createXRPAccount();
+    const accounts = await getXRPAccountsAddresses();
+    console.log('jajo accounts upd', accounts);
+
+    setAccountsXrpl(accounts);
   };
 
   return (
     <Container>
       <Heading>
-        Welcome to <Span>template-snap</Span>
+        Welcome to <Span>Ripple metamask snap</Span>
       </Heading>
       <Subtitle>
-        Get started by editing <code>src/index.ts</code>
+        Easy use XRPL Ripple network via Metamask <Span>in SECURE way</Span>
       </Subtitle>
       <CardContainer>
         {state.error && (
@@ -157,12 +176,12 @@ const Index = () => {
             fullWidth
           />
         )}
-        {!state.installedSnap && (
+        {!state.snapId && (
           <Card
             content={{
               title: 'Connect',
               description:
-                'Get started by connecting to and installing the example snap.',
+                'Connect app to metamask and start using Ripple network',
               button: (
                 <ConnectButton
                   onClick={handleConnectClick}
@@ -171,6 +190,7 @@ const Index = () => {
               ),
             }}
             disabled={!state.isFlask}
+            fullWidth={true}
           />
         )}
         {shouldDisplayReconnectButton(state.installedSnap) && (
@@ -189,27 +209,29 @@ const Index = () => {
             disabled={!state.installedSnap}
           />
         )}
-        <Card
-          content={{
-            title: 'createXRPAccount',
-            description:
-              'Display a custom message within a confirmation screen in MetaMask.',
-            button: (
-              <CreateXRPAccountButton
-                onClick={createXRPAccount}
-                disabled={false}
-              />
-            ),
-          }}
-          disabled={false}
-          fullWidth={false}
-        />
+        {state.snapId && (
+          <Card
+            content={{
+              title: 'createXRPAccount',
+              description:
+                'Display a custom message within a confirmation screen in MetaMask.',
+              button: (
+                <CreateXRPAccountButton
+                  onClick={handleCreateAccount}
+                  disabled={false}
+                />
+              ),
+            }}
+            disabled={false}
+            fullWidth={false}
+          />
+        )}
+        <AddressList accounts={accountsXrpl} />
         <Notice>
           <p>
-            Please note that the <b>snap.manifest.json</b> and{' '}
-            <b>package.json</b> must be located in the server root directory and
-            the bundle must be hosted at the location specified by the location
-            field.
+            Please note that <b>all your private informations like keys</b> are
+            kept in secure way in isolated environment and are not shared with
+            anyone.
           </p>
         </Notice>
       </CardContainer>

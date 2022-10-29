@@ -13,11 +13,13 @@ export type MetamaskState = {
   isFlask: boolean;
   installedSnap?: Snap;
   error?: Error;
+  snapId?: string;
 };
 
 const initialState: MetamaskState = {
   isFlask: false,
   error: undefined,
+  snapId: undefined,
 };
 
 type MetamaskDispatch = { type: MetamaskActions; payload: any };
@@ -35,6 +37,7 @@ export enum MetamaskActions {
   SetInstalled = 'SetInstalled',
   SetFlaskDetected = 'SetFlaskDetected',
   SetError = 'SetError',
+  SetSnapId = 'SetSnapId',
 }
 
 const reducer: Reducer<MetamaskState, MetamaskDispatch> = (state, action) => {
@@ -49,6 +52,12 @@ const reducer: Reducer<MetamaskState, MetamaskDispatch> = (state, action) => {
       return {
         ...state,
         isFlask: action.payload,
+      };
+
+    case MetamaskActions.SetSnapId:
+      return {
+        ...state,
+        snapId: action.payload,
       };
 
     case MetamaskActions.SetError:

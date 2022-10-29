@@ -13,6 +13,7 @@ import {
   ReconnectButton,
   CreateXRPAccountButton,
 } from './Buttons';
+import AddressList from './AddressList';
 import { Card } from './Card';
 
 const Container = styled.div`
@@ -137,6 +138,7 @@ export const Home = () => {
 
   return (
     <Container>
+      {console.log('state.snapId', state.snapId)}
       <Heading>
         Welcome to <Span>template-snap</Span>
       </Heading>
@@ -160,7 +162,7 @@ export const Home = () => {
             fullWidth
           />
         )}
-        {!state.installedSnap && (
+        {!state.snapId && (
           <Card
             content={{
               title: 'Connect',
@@ -192,6 +194,7 @@ export const Home = () => {
             disabled={!state.installedSnap}
           />
         )}
+        <AddressList />
         <Notice>
           <p>
             Please note that the <b>snap.manifest.json</b> and{' '}

@@ -44,6 +44,16 @@ export async function addAccount(
       ],
     });
   }
+
+  //   await wallet.request({
+  //     method: 'snap_notify',
+  //     params: [
+  //       {
+  //         type: 'inApp',
+  //         message: `Account`,
+  //       },
+  //     ],
+  //   });
 }
 
 export async function getAccountsSeeds(
@@ -76,15 +86,18 @@ export async function getAccountsSeeds(
 export async function getAccountsAddresses(
   walletSnap: WalletSnap,
 ): Promise<string[]> {
-  await getAccountsSeeds(walletSnap);
   const xrplData = await walletSnap.request({
     method: 'snap_manageState',
     params: ['get'],
   });
 
+  if (xrplData) {
+    console.log('jajo xrplData', xrplData);
+  }
+
   console.log(
     'jajo xrplData',
-    xrplData.xrp.accounts.map((account) => account.classicAddress) || [],
+    xrplData?.xrp.accounts.map((account) => account.classicAddress) || [],
   );
-  return xrplData.xrp.accounts.map((account) => account.classicAddress) || [];
+  return xrplData?.xrp.accounts.map((account) => account.classicAddress) || [];
 }

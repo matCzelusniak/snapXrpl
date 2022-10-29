@@ -47,9 +47,15 @@ export const Header = ({
 
   const handleConnectClick = async () => {
     try {
-      await connectSnap();
-      const installedSnap = await getSnap();
+      const snapId = await connectSnap();
+      console.log('jajo snap installed', snapId);
 
+      dispatch({
+        type: MetamaskActions.SetSnapId,
+        payload: snapId,
+      });
+
+      const installedSnap = await getSnap();
       dispatch({
         type: MetamaskActions.SetInstalled,
         payload: installedSnap,
@@ -63,7 +69,7 @@ export const Header = ({
     <HeaderWrapper>
       <LogoWrapper>
         <SnapLogo color={theme.colors.icon.default} size={36} />
-        <Title>template-snap</Title>
+        <Title>Ripple snap</Title>
       </LogoWrapper>
       <RightContainer>
         <Toggle

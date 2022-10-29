@@ -21,19 +21,29 @@ export const getSnaps = async (): Promise<GetSnapsResponse> => {
 export const connectSnap = async (
   snapId: string = defaultSnapOrigin,
   params: Record<'version' | string, unknown> = {},
-) => {
-  await window.ethereum.request({
+): string => {
+  const result = await window.ethereum.request({
     method: 'wallet_enable',
     params: [
       {
-        wallet_snap: {
-          [snapId]: {
-            ...params,
-          },
+        [`wallet_snap_${snapId}`]: {
+          ...params,
         },
       },
     ],
   });
+  //todo matCzelusniak workarround for problems with getSnaps
+  let snapConnectedId = '';
+  if (result.snaps) {
+    for (const [, value] of Object.entries(result.snaps)) {
+      if (value?.id) {
+        snapConnectedId = value.id as string;
+      }
+    }
+  }
+
+  console.log('jajo snapConnectedId', result);
+  return snapConnectedId;
 };
 
 /**
@@ -44,8 +54,8 @@ export const connectSnap = async (
  */
 export const getSnap = async (version?: string): Promise<Snap | undefined> => {
   try {
+    //todo Mat that methods doesn't work. It calls too fast in chromium ?
     const snaps = await getSnaps();
-
     return Object.values(snaps).find(
       (snap) =>
         snap.id === defaultSnapOrigin && (!version || snap.version === version),

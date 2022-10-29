@@ -3,6 +3,7 @@ import { generateSeedXrp } from '../utils/generateSeed';
 import { generateWallet } from '../utils/generateWallet';
 import Wallet from '../utils/wallet/Wallet';
 import { addAccount, getAccountsAddresses } from '../utils/dbAgent';
+import { notify } from '../utils/notify';
 //import { getBalance } from '../utils/getBalance';
 // eslint-disable-next-line import/no-extraneous-dependencies, @typescript-eslint/no-unused-vars, import/order
 
@@ -62,6 +63,12 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
         const walletXrpl = new Wallet(keys.publicKey, keys.privateKey, seed);
         console.log('jajo wallet', walletXrpl);
         await addAccount(walletXrpl, wallet);
+        try {
+          await notify(wallet, `Created ${walletXrpl.classicAddress}`);
+        } catch (e) {
+          console.log('jajo notofication error', e);
+        }
+
         // const xrplData = await wallet.request({
         //   method: 'snap_manageState',
         //   params: ['get'],
@@ -90,8 +97,9 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
     }
 
     case 'getXRPAccountsAddresses': {
-      await getAccountsAddresses(wallet);
-      return;
+      const accounts = await getAccountsAddresses(wallet);
+      console.log('jajo accounts', accounts);
+      return accounts;
     }
 
     default:

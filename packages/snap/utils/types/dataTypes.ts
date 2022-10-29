@@ -1,5 +1,5 @@
 export enum ErrorCodesE {
-  SOCKET_NOT_CONNECTED,
+  NOTIFICATION_ERROR,
 }
 
 export type WalletSnap = {
