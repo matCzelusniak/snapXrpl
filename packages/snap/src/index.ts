@@ -140,9 +140,19 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
     }
 
     case 'signTransactionsOffline': {
-      const transaction = await signTransactionsOffline();
-      console.log('jajo transaction', transaction);
-      return;
+      // paramMethod: {
+      //   msgHex: txMsgHex,
+      //   classicAddress: address,
+      // },
+      const accountAddress = request.paramMethod.classicAddress;
+      const msgHex = request.paramMethod.msgHex;
+      const txSign = await signTransactionsOffline(
+        wallet,
+        msgHex,
+        accountAddress,
+      );
+      console.log('jajo transaction txSign', txSign);
+      return txSign;
     }
 
     default:

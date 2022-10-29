@@ -1,3 +1,4 @@
+/* eslint-disable import/order */
 /* eslint-disable import/no-extraneous-dependencies */
 import * as React from 'react';
 import List from '@mui/material/List';
@@ -16,6 +17,9 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import DialogActions from '@mui/material/DialogActions';
 import TextField from '@mui/material/TextField';
 import { signTransactionsOffline } from '../utils';
+import { stringToHex } from '../utils/helpers';
+import utf8 from 'utf8';
+import ApiClient from '../utils/apiClient';
 
 const SEND_XRPL = 'SEND_XRPL';
 
@@ -34,18 +38,33 @@ export default function AddressList(props: { accounts: string[] }) {
   };
 
   //todo matCzelusniak move logic outside component
-  const handleSubmitTx = (accountSource: string) => {
+  const handleSubmitTx = async (accountSource: string) => {
     switch (transactionType) {
       case SEND_XRPL: {
         const tx = {
           TransactionType: 'Payment',
           Account: accountSource,
-          Amount: '20',
+          Amount: 500000,
           Destination: accountDestination,
+          Fee: 1000,
         };
         const txTstring = JSON.stringify(tx);
-        signTransactionsOffline;
+        console.log('jajo txTstring', txTstring);
+        // const encoder = new TextEncoder();
+        // const msgBuffer = encoder.encode(txTstring);
+        // console.log('jajo txTstring msgBuffer', msgBuffer);
+        //const txMsgInHex = convertHex(msgBuffer);
+        // const txInHex = msgBuffer.toString('hex');
+        //console.log('jajo txTstring txMsgInHex', txInHex);
+        const utfEncoded = utf8.encode(txTstring);
+        console.log('jajo txTstring txMsgInHex', utfEncoded);
+        const strHex = stringToHex(txTstring);
+        console.log('jajo txTstring strHex', strHex);
+        //signTransactionsOffline;
         console.log('jajo tx', tx);
+        const signedTX = await signTransactionsOffline(strHex, accountSource);
+        console.log('jajo signedTX', signedTX);
+        ApiClient.getApi().submitTx(signedTX);
         break;
       }
 

@@ -128,6 +128,17 @@ class Client {
     this.mQueryMap.set(request.id, request.command);
     this.send(JSON.stringify(request));
   }
+
+  public async submitTx(txHex: string) {
+    const request = {
+      // id: Client.messageId,
+      command: 'submit',
+      tx_blob: txHex,
+    };
+    this.mQueryMap.set(request.id, request.command);
+    console.log('jajo submitTx string', JSON.stringify(request));
+    this.send(JSON.stringify(request));
+  }
 }
 
 export default class ApiClient {
