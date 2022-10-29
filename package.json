@@ -46,5 +46,9 @@
   "packageManager": "yarn@3.2.1",
   "engines": {
     "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "ripple-address-codec": "^4.2.4",
+    "xrpl": "^2.5.0"
   }
 }

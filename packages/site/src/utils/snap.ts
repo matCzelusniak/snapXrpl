@@ -57,19 +57,54 @@ export const getSnap = async (version?: string): Promise<Snap | undefined> => {
 };
 
 /**
- * Invoke the "hello" method from the example snap.
+ * Invoke the "connectSwap" method from the example snap.
  */
 
-export const sendHello = async () => {
-  await window.ethereum.request({
+export const connectSwap = async () => {
+  return await window.ethereum.request({
     method: 'wallet_invokeSnap',
     params: [
       defaultSnapOrigin,
       {
-        method: 'hello',
+        method: 'connectSwap',
       },
     ],
   });
 };
 
+export const getXRPAccounts = async () => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'getXRPAccounts',
+      },
+    ],
+  });
+};
+
+export const createXRPAccount = async () => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'createXRPAccount',
+      },
+    ],
+  });
+};
+
+export const getXRPAccountsAddresses = async () => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'getXRPAccountsAddresses',
+      },
+    ],
+  });
+};
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');

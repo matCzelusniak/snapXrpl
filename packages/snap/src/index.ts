@@ -1,13 +1,14 @@
 import { OnRpcRequestHandler } from '@metamask/snap-types';
+import { generateSeedXrp } from '../utils/generateSeed';
+import { generateWallet } from '../utils/generateWallet';
+import Wallet from '../utils/wallet/Wallet';
+import { addAccount, getAccountsAddresses } from '../utils/dbAgent';
+//import { getBalance } from '../utils/getBalance';
+// eslint-disable-next-line import/no-extraneous-dependencies, @typescript-eslint/no-unused-vars, import/order
 
-/**
- * Get a message from the origin. For demonstration purposes only.
- *
- * @param originString - The origin string.
- * @returns A message based on the origin.
- */
-export const getMessage = (originString: string): string =>
-  `Hello, ${originString}!`;
+function timeout(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
 
 /**
  * Handle incoming JSON-RPC requests, sent through `wallet_invokeSnap`.
@@ -20,21 +21,79 @@ export const getMessage = (originString: string): string =>
  * @throws If the request method is not valid for this snap.
  * @throws If the `snap_confirm` call failed.
  */
-export const onRpcRequest: OnRpcRequestHandler = ({ origin, request }) => {
+export const onRpcRequest: OnRpcRequestHandler = async ({
+  origin,
+  request,
+}) => {
   switch (request.method) {
-    case 'hello':
-      return wallet.request({
+    case 'getXRPAccounts': {
+      await wallet.request({
+        method: 'snap_manageState',
+        params: ['update', { hello: 'world' }],
+      });
+      const persistedData = await wallet.request({
+        method: 'snap_manageState',
+        params: ['get'],
+      });
+      return;
+    }
+
+    case 'createXRPAccount': {
+      const resultCfm = await wallet.request({
         method: 'snap_confirm',
         params: [
           {
-            prompt: getMessage(origin),
+            prompt: 'XRP Ledger Account creation',
             description:
-              'This custom confirmation is just for display purposes.',
+              'Confirm that you want to create a new XRP Ledger account',
             textAreaContent:
-              'But you can edit the snap source code to make it do something, if you want to!',
+              'All data will be stored in your metamask in secure way. You can export it later.',
           },
         ],
       });
+
+      if (resultCfm) {
+        const randStr: string = (Math.random() + 1).toString(36);
+        console.log('jajo - randStr', randStr);
+        const seed = await generateSeedXrp(randStr);
+        console.log('jajo seed', seed);
+        const keys = generateWallet(seed);
+        console.log('jajo keys', keys);
+        const walletXrpl = new Wallet(keys.publicKey, keys.privateKey, seed);
+        console.log('jajo wallet', walletXrpl);
+        await addAccount(walletXrpl, wallet);
+        // const xrplData = await wallet.request({
+        //   method: 'snap_manageState',
+        //   params: ['get'],
+        // });
+
+        // if (!xrplData) {
+        //   await wallet.request({
+        //     method: 'snap_manageState',
+        //     params: [
+        //       'update',
+        //       {
+        //         xrp: {
+        //           accounts: [walletXrpl],
+        //         },
+        //       },
+        //     ],
+        //   });
+        // }
+
+        //console.log('jajo accounts', accounts);
+      }
+
+      //getJsonStr;
+
+      return;
+    }
+
+    case 'getXRPAccountsAddresses': {
+      await getAccountsAddresses(wallet);
+      return;
+    }
+
     default:
       throw new Error('Method not found.');
   }

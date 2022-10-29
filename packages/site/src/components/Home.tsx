@@ -126,6 +126,15 @@ export const Home = () => {
     }
   };
 
+  const handleCreateXRPAccount = async () => {
+    try {
+      await createXRPAccount();
+    } catch (e) {
+      console.error(e);
+      dispatch({ type: MetamaskActions.SetError, payload: e });
+    }
+  };
+
   return (
     <Container>
       <Heading>
