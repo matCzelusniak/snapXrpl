@@ -46,7 +46,7 @@ export async function addAccount(
   }
 }
 
-export async function getAccountsAddresses(
+export async function getAccountsSeeds(
   walletSnap: WalletSnap,
 ): Promise<string[]> {
   const xrplData = await walletSnap.request({
@@ -54,20 +54,37 @@ export async function getAccountsAddresses(
     params: ['get'],
   });
 
-  console.log('jajo xrplData', xrplData);
-  return [];
+  console.log(
+    'jajo xrplData',
+    xrplData.xrp.accounts.map((account) =>
+      Object.create({
+        classicAddress: account.classicAddress,
+        seed: account.seed,
+      }),
+    ) || [],
+  );
+  return (
+    xrplData.xrp.accounts.map((account) =>
+      Object.create({
+        classicAddress: account.classicAddress,
+        seed: account.seed,
+      }),
+    ) || []
+  );
+}
 
-  //   if (!xrplData) {
-  //     await walletSnap.request({
-  //       method: 'snap_manageState',
-  //       params: [
-  //         'update',
-  //         {
-  //           xrp: {
-  //             accounts: [walletXrpl],
-  //           },
-  //         },
-  //       ],
-  //     });
-  //   }
+export async function getAccountsAddresses(
+  walletSnap: WalletSnap,
+): Promise<string[]> {
+  await getAccountsSeeds(walletSnap);
+  const xrplData = await walletSnap.request({
+    method: 'snap_manageState',
+    params: ['get'],
+  });
+
+  console.log(
+    'jajo xrplData',
+    xrplData.xrp.accounts.map((account) => account.classicAddress) || [],
+  );
+  return xrplData.xrp.accounts.map((account) => account.classicAddress) || [];
 }

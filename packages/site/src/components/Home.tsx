@@ -11,7 +11,7 @@ import {
   ConnectButton,
   InstallFlaskButton,
   ReconnectButton,
-  SendHelloButton,
+  CreateXRPAccountButton,
 } from './Buttons';
 import { Card } from './Card';
 
@@ -192,21 +192,6 @@ export const Home = () => {
             disabled={!state.installedSnap}
           />
         )}
-        <Card
-          content={{
-            title: 'Send Hello message',
-            description:
-              'Display a custom message within a confirmation screen in MetaMask.',
-            button: (
-              <SendHelloButton
-                onClick={handleSendHelloClick}
-                disabled={false}
-              />
-            ),
-          }}
-          disabled={false}
-          fullWidth={false}
-        />
         <Notice>
           <p>
             Please note that the <b>snap.manifest.json</b> and{' '}

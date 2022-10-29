@@ -94,8 +94,10 @@ export const ReconnectButton = (props: ComponentProps<typeof Button>) => {
   );
 };
 
-export const SendHelloButton = (props: ComponentProps<typeof Button>) => {
-  return <Button {...props}>Send message</Button>;
+export const CreateXRPAccountButton = (
+  props: ComponentProps<typeof Button>,
+) => {
+  return <Button {...props}>Create XRPL Account</Button>;
 };
 
 export const HeaderButtons = ({
