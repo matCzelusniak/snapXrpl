@@ -91,9 +91,7 @@ export async function getAccountsAddresses(
     params: ['get'],
   });
 
-  if (xrplData) {
-    console.log('jajo xrplData', xrplData);
-  }
+  console.log('jajo xrplData', xrplData?.xrp.accounts[0]);
 
   console.log(
     'jajo xrplData',

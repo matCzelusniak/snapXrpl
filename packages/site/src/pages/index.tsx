@@ -11,6 +11,8 @@ import {
   createXRPAccount,
   getXRPAccountsAddresses,
   shouldDisplayReconnectButton,
+  createXRPAccountBasedOnSeed,
+  createXRPAccountBasedOnSecret,
 } from '../utils';
 import {
   ConnectButton,
@@ -18,6 +20,7 @@ import {
   ReconnectButton,
   CreateXRPAccountButton,
   CreateXRPAccountButtonBasedOnSeed,
+  CreateXRPAccountButtonBasedOnSecret,
   Card,
 } from '../components';
 
@@ -113,6 +116,7 @@ const Index = () => {
   const dispatch = useDispatch();
   const xrplData = useSelector((state) => state);
   const [seed, setSeed] = useState('');
+  const [secret, setSecret] = useState('');
 
   console.log('xrplData', xrplData);
   ApiClient.initApi();
@@ -185,7 +189,7 @@ const Index = () => {
     dispatch({ type: 'SET_ACCOUNTS', payload: accountsData });
   };
 
-  const handleCreateAccountBasedOnSeed = async (seed) => {
+  const handleCreateAccountBasedOnSeed = async () => {
     await createXRPAccountBasedOnSeed(seed);
     const accounts = await getXRPAccountsAddresses();
     console.log('jajo accounts upd', accounts);
@@ -196,10 +200,38 @@ const Index = () => {
         classicAddress: account,
         balance: 0,
       });
+
+      try {
+        ApiClient.getApi().getBalance(account);
+      } catch (e) {
+        console.log(e);
+      }
     }
 
-    dispatch({ type: 'SET_ACCOUNTS', payload: accounts });
+    dispatch({ type: 'SET_ACCOUNTS', payload: accountsData });
   };
+
+  // const handleCreateAccountBasedOnSecret = async () => {
+  //   await createXRPAccountBasedOnSecret(secret);
+  //   const accounts = await getXRPAccountsAddresses();
+  //   console.log('jajo accounts upd', accounts);
+
+  //   let accountsData = [];
+  //   for (let account of accounts) {
+  //     accountsData.push({
+  //       classicAddress: account,
+  //       balance: 0,
+  //     });
+
+  //     try {
+  //       ApiClient.getApi().getBalance(account);
+  //     } catch (e) {
+  //       console.log(e);
+  //     }
+  //   }
+
+  //   dispatch({ type: 'SET_ACCOUNTS', payload: accountsData });
+  // };
 
   return (
     <Container>
@@ -263,8 +295,7 @@ const Index = () => {
           <Card
             content={{
               title: 'create XRPL Account',
-              description:
-                'Display a custom message within a confirmation screen in MetaMask.',
+              description: 'Create new XRPL account and use easy in Secure way',
               button: (
                 <CreateXRPAccountButton
                   onClick={handleCreateAccount}
@@ -281,7 +312,7 @@ const Index = () => {
             content={{
               title: 'upload XRPL Account',
               description:
-                'Display a custom message within a confirmation screen in MetaMask.',
+                'Upload existed XRPL account to metamask based on SEED. Use easy in Secure way',
               button: (
                 <>
                   <CreateXRPAccountButtonBasedOnSeed
@@ -303,6 +334,33 @@ const Index = () => {
             fullWidth={false}
           />
         )}
+        {/* {state.snapId && (
+          <Card
+            content={{
+              title: 'upload XRPL Account',
+              description:
+                'Upload existed XRPL account to metamask based on SECRET. Use easy in Secure way',
+              button: (
+                <>
+                  <CreateXRPAccountButtonBasedOnSecret
+                    onClick={handleCreateAccountBasedOnSecret}
+                    disabled={false}
+                  />
+                  <p></p>
+                  <TextField
+                    id="outlined-basic"
+                    label="Seed"
+                    variant="outlined"
+                    value={secret}
+                    onChange={(e) => setSecret(e.target.value)}
+                  />
+                </>
+              ),
+            }}
+            disabled={false}
+            fullWidth={false}
+          />
+        )} */}
         <AddressList accounts={xrplData.accounts} />
         <Notice>
           <p>

@@ -7,7 +7,7 @@ enum ConnectionStatusE {
   CONNECTED,
 }
 
-const DEFAULT_ADDRESS = 'wss://s1.ripple.com/';
+const DEFAULT_ADDRESS = 'wss://s.altnet.rippletest.net:51233';
 
 class Client {
   private static messageId = 1;
