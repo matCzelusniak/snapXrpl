@@ -31,7 +31,9 @@ class Client {
     });
 
     this.mSocket.addEventListener('message', (event) => {
-      console.log('[XRP_DEBUG] Socket message', event);
+      console.log('[XRP_DEBUG] Socket message', JSON.parse(event.data));
+
+      r3zmi6PcvbQk5ZQc9uREaYKRnkPcV7Fyxn;
     });
 
     this.mSocket.addEventListener('error', (event) => {

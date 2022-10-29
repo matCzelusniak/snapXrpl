@@ -1,9 +1,14 @@
+/* eslint-disable import/order */
 import { FunctionComponent, ReactNode, useContext } from 'react';
 import styled from 'styled-components';
 import { Footer, Header } from './components';
 
 import { GlobalStyle } from './config/theme';
 import { ToggleThemeContext } from './Root';
+// eslint-disable-next-line import/no-extraneous-dependencies
+import { Provider } from 'react-redux';
+import { createStore } from 'redux';
+import XrplReducer from './reducer/xrpl.reducers';
 
 const Wrapper = styled.div`
   display: flex;
@@ -19,15 +24,15 @@ export type AppProps = {
 
 export const App: FunctionComponent<AppProps> = ({ children }) => {
   const toggleTheme = useContext(ToggleThemeContext);
-
+  const store = createStore(XrplReducer);
   return (
-    <>
+    <Provider store={store}>
       <GlobalStyle />
       <Wrapper>
         <Header handleToggleClick={toggleTheme} />
         {children}
         <Footer />
       </Wrapper>
-    </>
+    </Provider>
   );
 };

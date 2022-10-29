@@ -1,5 +1,5 @@
 // eslint-disable-next-line import/no-useless-path-segments, @typescript-eslint/no-unused-vars
-import ErrorSocketNotConnected from './error/ErrorSocketNotConnected';
+import ErrorSocketNotConnected from './error/ErrorNotification';
 
 enum ConnectionStatusE {
   IDLE,

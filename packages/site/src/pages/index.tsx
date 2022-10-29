@@ -1,11 +1,9 @@
+/* eslint-disable import/no-extraneous-dependencies */
 import { useContext, useState } from 'react';
 import styled from 'styled-components';
-import {
-  MetamaskActions,
-  MetaMaskContext,
-  XrplActions,
-  XrplContext,
-} from '../hooks';
+import { MetamaskActions, MetaMaskContext } from '../hooks';
+import { useDispatch, useSelector } from 'react-redux';
+
 import {
   connectSnap,
   getSnap,
@@ -110,8 +108,10 @@ const ErrorMessage = styled.div`
 
 const Index = () => {
   const [state, dispatchMetamask] = useContext(MetaMaskContext);
-  const [accountsXrpl, setAccountsXrpl] = useState([]);
-
+  const dispatch = useDispatch();
+  const xrplData = useSelector((state) => state);
+  console.log('xrplData', xrplData);
+  ApiClient.initApi();
   const handleConnectClick = async () => {
     try {
       const snapId = await connectSnap();
@@ -127,11 +127,26 @@ const Index = () => {
         type: MetamaskActions.SetInstalled,
         payload: installedSnap,
       });
-      ApiClient.initApi();
+
       if (snapId) {
-        const accounts = await getXRPAccountsAddresses();
-        console.log('jajo accounts', accounts);
-        setAccountsXrpl(accounts);
+        let accounts = await getXRPAccountsAddresses();
+        let accountsData = [];
+        for (let account of accounts) {
+          accountsData.push({
+            classicAddress: account,
+            balance: 0,
+          });
+
+          try {
+            ApiClient.getApi().getBalance(account);
+          } catch (e) {
+            console.log(e);
+          }
+        }
+
+        console.log('jajo accounts', accountsData);
+        dispatch({ type: 'SET_ACCOUNTS', payload: accountsData });
+
         // distapchXrpl({
         //   type: XrplActions.SetAccounts,
         //   payload: accounts,
@@ -148,7 +163,15 @@ const Index = () => {
     const accounts = await getXRPAccountsAddresses();
     console.log('jajo accounts upd', accounts);
 
-    setAccountsXrpl(accounts);
+    let accountsData = [];
+    for (let account of accounts) {
+      accountsData.push({
+        classicAddress: account,
+        balance: 0,
+      });
+    }
+
+    dispatch({ type: 'SET_ACCOUNTS', payload: accounts });
   };
 
   return (
@@ -226,7 +249,7 @@ const Index = () => {
             fullWidth={false}
           />
         )}
-        <AddressList accounts={accountsXrpl} />
+        <AddressList accounts={xrplData.accounts} />
         <Notice>
           <p>
             Please note that <b>all your private informations like keys</b> are

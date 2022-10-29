@@ -42,9 +42,10 @@ export default function AddressList(props: { accounts: string[] }) {
 
   return (
     <List sx={{ width: '100%', maxWidth: '360', bgcolor: 'bla' }}>
+      {console.log('jajo props', props)}
       {props.accounts.map((value) => (
         <ListItem
-          key={value}
+          key={value.classicAddress}
           disableGutters={false}
           sx={{ height: 30 }}
           secondaryAction={
@@ -99,7 +100,10 @@ export default function AddressList(props: { accounts: string[] }) {
             </div>
           }
         >
-          <ListItemText sx={{ fontSize: 25 }} primary={`${value}`} />
+          <ListItemText
+            sx={{ fontSize: 25 }}
+            primary={`${value.classicAddress}`}
+          />
         </ListItem>
       ))}
     </List>
