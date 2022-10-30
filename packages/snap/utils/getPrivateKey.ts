@@ -13,7 +13,6 @@ export const getPrivateKey = async (
     for (const account of xrplData?.xrp.accounts) {
       if (account.classicAddress === address) {
         privateKey = account.privateKey;
-        console.log('jajo private key ok', account);
       }
     }
   }

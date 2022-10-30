@@ -9,6 +9,6 @@ export const generateSeedXrp = async (secretKey: string) => {
     entropy: sha,
     algorithm: 'ecdsa-secp256k1',
   });
-  console.log('jajo generated seed', seed);
+
   return seed;
 };

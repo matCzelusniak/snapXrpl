@@ -30,7 +30,6 @@ export default function AddressList(props: { accounts: string[] }) {
   const [amountToSend, setAmountToSend] = useState<number>(0);
 
   const handleChangeTransactionType = (event) => {
-    console.log('jajo event', event.target.value);
     setTransactionType(event.target.value || null);
   };
 
@@ -40,8 +39,6 @@ export default function AddressList(props: { accounts: string[] }) {
 
   //todo matCzelusniak move logic outside component
   const handleSubmitTx = async (accountSource: string) => {
-    console.log('jajo dupa123 accountSource', accountSource);
-    console.log('jajo dupa123 accountDestination', accountDestination);
     switch (transactionType) {
       case SEND_XRPL: {
         setOpen(false);

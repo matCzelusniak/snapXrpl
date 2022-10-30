@@ -42,7 +42,6 @@ export const connectSnap = async (
     }
   }
 
-  console.log('jajo snapConnectedId', result);
   return snapConnectedId;
 };
 

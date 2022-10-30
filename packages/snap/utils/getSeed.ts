@@ -10,7 +10,6 @@ export const getSeed = async (address: string, walletSnap): Promise<string> => {
     for (const account of xrplData?.xrp.accounts) {
       if (account.classicAddress === address) {
         seed = account.seed;
-        console.log('jajo private seed', seed);
       }
     }
   }

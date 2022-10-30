@@ -1,4 +1,4 @@
-# Ripple snap - use XRPL Ripple network via Metamask in SECURE and EASY way
+# Ripple snap MVP - use XRPL Ripple network via Metamask in SECURE and EASY way
 
 Project created with aim to solve problem of blockchain 'diversity'. XRPL with XRP token introduced due to likely suitability of adaptation as fast way of transfer 'money' in way from institutions to institution and institution <-> human beings as well.
 
@@ -32,7 +32,7 @@ Project created with aim to solve problem of blockchain 'diversity'. XRPL with X
 - Upload existed XRP Ledger based on seed. Possibility of upload multiple accounts - as many as you want.
 - Fast refreshing currenct balance of XRP for all accounts
 - Information about account that is not yet activated. In XRPL just created account is not activate. That account must receive 10XRP to start be 'normal' account
-- sednng transactions type 'Payment'. That transaction is for transfer funds between accounts. **That tx transactions are fully hashed internally in metamask isolated environment without use outsided connection.**
+- sednng transactions type 'Payment' for XRP. That transaction is for transfer funds between accounts. **That tx transactions are fully hashed internally in metamask isolated environment without use outsided connection.**
 
 Technical stuff:
 

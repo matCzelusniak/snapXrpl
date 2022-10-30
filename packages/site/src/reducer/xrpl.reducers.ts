@@ -8,7 +8,6 @@ export default function XrplReducer(
 ) {
   switch (action.type) {
     case 'SET_ACCOUNTS': {
-      console.log('jajom action.payload', action.payload);
       return {
         ...state,
         accounts: action.payload,

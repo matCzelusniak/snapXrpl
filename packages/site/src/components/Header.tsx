@@ -48,7 +48,6 @@ export const Header = ({
   const handleConnectClick = async () => {
     try {
       const snapId = await connectSnap();
-      console.log('jajo snap installed', snapId);
 
       dispatch({
         type: MetamaskActions.SetSnapId,

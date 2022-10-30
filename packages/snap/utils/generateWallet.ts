@@ -8,6 +8,5 @@ export const generateWallet = (
   publicKey: string;
 } => {
   const { publicKey, privateKey } = deriveKeypair(seed);
-  console.log('jajo keys', publicKey, privateKey);
   return { privateKey, publicKey };
 };

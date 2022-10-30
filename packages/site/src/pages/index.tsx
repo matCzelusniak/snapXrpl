@@ -115,14 +115,11 @@ const Index = () => {
   const dispatch = useDispatch();
   const xrplData = useSelector((state) => state);
   const [seed, setSeed] = useState('');
-  const [secret, setSecret] = useState('');
 
-  console.log('xrplData', xrplData);
   ApiClient.initApi();
   const handleConnectClick = async () => {
     try {
       const snapId = await connectSnap();
-      console.log('jajo snap installed', snapId);
       dispatchMetamask({
         type: MetamaskActions.SetSnapId,
         payload: snapId,
@@ -151,13 +148,7 @@ const Index = () => {
           }
         }
 
-        console.log('jajo accounts', accountsData);
         dispatch({ type: 'SET_ACCOUNTS', payload: accountsData });
-
-        // distapchXrpl({
-        //   type: XrplActions.SetAccounts,
-        //   payload: accounts,
-        // });
       }
     } catch (e) {
       console.error(e);
@@ -168,7 +159,6 @@ const Index = () => {
   const handleCreateAccount = async () => {
     await createXRPAccount();
     const accounts = await getXRPAccountsAddresses();
-    console.log('jajo accounts upd', accounts);
 
     let accountsData = [];
     for (let account of accounts) {
@@ -184,14 +174,12 @@ const Index = () => {
       }
     }
 
-    //console.log('jajo accounts upd', accounts);
     dispatch({ type: 'SET_ACCOUNTS', payload: accountsData });
   };
 
   const handleCreateAccountBasedOnSeed = async () => {
     await createXRPAccountBasedOnSeed(seed);
     const accounts = await getXRPAccountsAddresses();
-    console.log('jajo accounts upd', accounts);
 
     let accountsData = [];
     for (let account of accounts) {
@@ -209,28 +197,6 @@ const Index = () => {
 
     dispatch({ type: 'SET_ACCOUNTS', payload: accountsData });
   };
-
-  // const handleCreateAccountBasedOnSecret = async () => {
-  //   await createXRPAccountBasedOnSecret(secret);
-  //   const accounts = await getXRPAccountsAddresses();
-  //   console.log('jajo accounts upd', accounts);
-
-  //   let accountsData = [];
-  //   for (let account of accounts) {
-  //     accountsData.push({
-  //       classicAddress: account,
-  //       balance: 0,
-  //     });
-
-  //     try {
-  //       ApiClient.getApi().getBalance(account);
-  //     } catch (e) {
-  //       console.log(e);
-  //     }
-  //   }
-
-  //   dispatch({ type: 'SET_ACCOUNTS', payload: accountsData });
-  // };
 
   return (
     <Container>

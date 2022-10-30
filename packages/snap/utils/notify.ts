@@ -16,7 +16,7 @@ export const notify = async (walletSnap: WalletSnap, message: string) => {
       ],
     });
   } catch (e) {
-    console.log('jajo error', e);
+    console.log('error', e);
     throw new ErrorNotification('inAppaccount creation issuse');
   }
 
@@ -31,7 +31,7 @@ export const notify = async (walletSnap: WalletSnap, message: string) => {
       ],
     });
   } catch (e) {
-    console.log('jajo error', e);
+    console.log('error', e);
     throw new ErrorNotification('inAppaccount creation issuse');
   }
 };

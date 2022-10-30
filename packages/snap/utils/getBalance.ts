@@ -10,6 +10,6 @@ export const getBalance = async (address: string, socket: WebSocket | null) => {
     ledger_index: 'current',
     queue: true,
   };
-  console.log('jajo newRequest', JSON.stringify(request));
+
   socket.send(JSON.stringify(request));
 };
