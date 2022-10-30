@@ -71,6 +71,7 @@ export default function AddressList(props: { accounts: string[] }) {
         const pv =
           'ED9A489C4991DFBBCC4513DD5F2C9F19584BC453A288F830634DBA959E6C7E92AB';
 
+        //encodeForSigning(tx);
         // const encoder = new TextEncoder();
         // const msgBuffer = encoder.encode(txTstring);
         // console.log('jajo txTstring msgBuffer', msgBuffer);
@@ -140,8 +141,8 @@ export default function AddressList(props: { accounts: string[] }) {
           fee_mult_max: 1000,
         };
 
-        ApiClient.getApi().submitSign(temp2);
-        //ApiClient.getApi().submitTx(signedTX);
+        //ApiClient.getApi().submitSign(temp2);
+        ApiClient.getApi().submitTx(signedTX);
         break;
       }
 
