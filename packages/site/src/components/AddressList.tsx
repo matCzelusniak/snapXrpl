@@ -27,6 +27,7 @@ export default function AddressList(props: { accounts: string[] }) {
   const [open, setOpen] = React.useState(false);
   const [transactionType, setTransactionType] = useState<string>(SEND_XRPL);
   const [accountDestination, setAccountDestination] = useState<string>('');
+  const [amountToSend, setAmountToSend] = useState<number>(0);
 
   const handleChangeTransactionType = (event) => {
     console.log('jajo event', event.target.value);
@@ -43,11 +44,12 @@ export default function AddressList(props: { accounts: string[] }) {
     console.log('jajo dupa123 accountDestination', accountDestination);
     switch (transactionType) {
       case SEND_XRPL: {
+        setOpen(false);
         const tx = {
           TransactionType: 'Payment',
           Account: accountSource,
           Destination: accountDestination,
-          Amount: '13100000',
+          Amount: amountToSend.toString(),
           Fee: '12',
           Flags: 2147483648,
           Sequence: 32418809,
@@ -116,16 +118,27 @@ export default function AddressList(props: { accounts: string[] }) {
                         <option value={SEND_XRPL}>Send XRP</option>
                       </Select>
                       {transactionType === SEND_XRPL && (
-                        <TextField
-                          id="outlined-basic"
-                          label="XRP classic address"
-                          variant="outlined"
-                          size="medium"
-                          value={accountDestination}
-                          onChange={(e) =>
-                            setAccountDestination(e.target.value)
-                          }
-                        />
+                        <>
+                          <TextField
+                            id="outlined-basic"
+                            label="XRP classic address"
+                            variant="outlined"
+                            size="medium"
+                            value={accountDestination}
+                            onChange={(e) =>
+                              setAccountDestination(e.target.value)
+                            }
+                          />
+                          <p></p>
+                          <TextField
+                            id="outlined-basic"
+                            label="XRP Amount"
+                            variant="outlined"
+                            size="medium"
+                            value={amountToSend}
+                            onChange={(e) => setAmountToSend(e.target.value)}
+                          />
+                        </>
                       )}
                     </FormControl>
                   </Box>
