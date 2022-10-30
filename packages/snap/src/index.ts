@@ -5,6 +5,7 @@ import Wallet from '../utils/wallet/Wallet';
 import { addAccount, getAccountsAddresses } from '../utils/dbAgent';
 import { signTransactionsOffline } from '../utils/signTransactionsOffline';
 import { notify } from '../utils/notify';
+import { getSeed } from '../utils/getSeed';
 //import { getBalance } from '../utils/getBalance';
 // eslint-disable-next-line import/no-extraneous-dependencies, @typescript-eslint/no-unused-vars, import/order
 
@@ -146,6 +147,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       // },
       const accountAddress = request.paramMethod.classicAddress;
       const msgHex = request.paramMethod.msgHex;
+      console.log('jajo accountAddress zz', request.paramMethod);
       const txSign = await signTransactionsOffline(
         wallet,
         msgHex,
@@ -153,6 +155,10 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       );
       console.log('jajo transaction txSign', txSign);
       return txSign;
+    }
+
+    case 'getSeed': {
+      return await getSeed(request.paramMethod, wallet);
     }
 
     default:

@@ -162,4 +162,18 @@ export const getXRPAccountsAddresses = async () => {
     ],
   });
 };
+
+export const getSeed = async (account) => {
+  return await window.ethereum.request({
+    method: 'wallet_invokeSnap',
+    params: [
+      defaultSnapOrigin,
+      {
+        method: 'getSeed',
+        paramMethod: account,
+      },
+    ],
+  });
+};
+
 export const isLocalSnap = (snapId: string) => snapId.startsWith('local:');

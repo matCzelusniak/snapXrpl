@@ -337,33 +337,6 @@ const Index = () => {
             fullWidth={false}
           />
         )}
-        {state.snapId && (
-          <Card
-            content={{
-              title: 'upload XRPL Account',
-              description:
-                'Upload existed XRPL account to metamask based on SEED. Use easy in Secure way',
-              button: (
-                <>
-                  <CreateXRPAccountButtonBasedOnSeed
-                    onClick={handleSignTransactionsOffline}
-                    disabled={false}
-                  />
-                  <p></p>
-                  <TextField
-                    id="outlined-basic"
-                    label="Seed"
-                    variant="outlined"
-                    value={seed}
-                    onChange={(e) => setSeed(e.target.value)}
-                  />
-                </>
-              ),
-            }}
-            disabled={false}
-            fullWidth={false}
-          />
-        )}
         {/* {state.snapId && (
           <Card
             content={{

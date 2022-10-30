@@ -37,9 +37,9 @@ class Client {
 
     this.mSocket.addEventListener('message', (event) => {
       const parsedData = JSON.parse(event.data);
-      console.log('jajo - account_info', parsedData);
       console.log('[XRP_DEBUG] Socket message', parsedData);
       if (parsedData.status === 'success') {
+        console.log('jajo dd1', parsedData);
         if (this.mQueryMap.has(parsedData.id)) {
           const method = this.mQueryMap.get(parsedData.id);
           switch (method) {
@@ -131,13 +131,19 @@ class Client {
 
   public async submitTx(txHex: string) {
     const request = {
-      // id: Client.messageId,
+      id: 'example_submit',
       command: 'submit',
       tx_blob: txHex,
     };
     this.mQueryMap.set(request.id, request.command);
     console.log('jajo submitTx string', JSON.stringify(request));
     this.send(JSON.stringify(request));
+  }
+
+  public async submitSign(txReady) {
+    //this.mQueryMap.set(request.id, request.command);
+    console.log('jajo submitTx submitSign', JSON.stringify(txReady));
+    this.send(JSON.stringify(txReady));
   }
 }
 
