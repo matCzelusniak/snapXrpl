@@ -141,20 +141,26 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
     }
 
     case 'signTransactionsOffline': {
-      // paramMethod: {
-      //   msgHex: txMsgHex,
-      //   classicAddress: address,
-      // },
-      const accountAddress = request.paramMethod.classicAddress;
-      const msgHex = request.paramMethod.msgHex;
-      console.log('jajo accountAddress zz', request.paramMethod);
-      const txSign = await signTransactionsOffline(
-        wallet,
-        msgHex,
-        accountAddress,
-      );
-      console.log('jajo transaction txSign', txSign);
-      return txSign;
+      const resultCfm = await wallet.request({
+        method: 'snap_confirm',
+        params: [
+          {
+            prompt: 'XRP Ledger Transaction to cinfirm',
+            description: `Confirm that you want to transfer XRP to ${request.paramMethod.Destination}`,
+            textAreaContent: 'Please confirm transaction or reject',
+          },
+        ],
+      });
+
+      if (resultCfm) {
+        const txSign = await signTransactionsOffline(
+          wallet,
+          request.paramMethod,
+        );
+        console.log('jajo transaction txSign', txSign);
+        return txSign;
+      }
+      return false;
     }
 
     case 'getSeed': {

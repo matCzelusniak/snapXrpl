@@ -210,10 +210,6 @@ const Index = () => {
     dispatch({ type: 'SET_ACCOUNTS', payload: accountsData });
   };
 
-  const handleSignTransactionsOffline = async () => {
-    await signTransactionsOffline();
-  };
-
   // const handleCreateAccountBasedOnSecret = async () => {
   //   await createXRPAccountBasedOnSecret(secret);
   //   const accounts = await getXRPAccountsAddresses();
@@ -294,6 +290,7 @@ const Index = () => {
             disabled={!state.installedSnap}
           />
         )}
+        <AddressList accounts={xrplData.accounts} />
         {state.snapId && (
           <Card
             content={{
@@ -337,34 +334,6 @@ const Index = () => {
             fullWidth={false}
           />
         )}
-        {/* {state.snapId && (
-          <Card
-            content={{
-              title: 'upload XRPL Account',
-              description:
-                'Upload existed XRPL account to metamask based on SECRET. Use easy in Secure way',
-              button: (
-                <>
-                  <CreateXRPAccountButtonBasedOnSecret
-                    onClick={handleCreateAccountBasedOnSecret}
-                    disabled={false}
-                  />
-                  <p></p>
-                  <TextField
-                    id="outlined-basic"
-                    label="Seed"
-                    variant="outlined"
-                    value={secret}
-                    onChange={(e) => setSecret(e.target.value)}
-                  />
-                </>
-              ),
-            }}
-            disabled={false}
-            fullWidth={false}
-          />
-        )} */}
-        <AddressList accounts={xrplData.accounts} />
         <Notice>
           <p>
             Please note that <b>all your private informations like keys</b> are

@@ -35,11 +35,14 @@ export const Footer = () => {
 
   return (
     <FooterWrapper>
-      <PoweredByButton href="https://docs.metamask.io/" target="_blank">
-        <MetaMaskFox />
+      <PoweredByButton
+        href="https://www.linkedin.com/in/mateusz-czelu%C5%9Bniak-24177b140"
+        target="_blank"
+      >
+        {/* <MetaMaskFox /> */}
         <PoweredByContainer>
           <PoweredBy color={theme.colors.text.muted} />
-          <MetaMask color={theme.colors.text.default} />
+          <>matCzelusniak</>
         </PoweredByContainer>
       </PoweredByButton>
     </FooterWrapper>
