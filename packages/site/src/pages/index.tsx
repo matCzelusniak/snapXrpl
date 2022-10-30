@@ -238,7 +238,8 @@ const Index = () => {
         Welcome to <Span>Ripple metamask snap</Span>
       </Heading>
       <Subtitle>
-        Easy use XRPL Ripple network via Metamask <Span>in SECURE way</Span>
+        Easy use XRPL Ripple network via Metamask{' '}
+        <Span>in SECURE and EASY way</Span>
       </Subtitle>
       <CardContainer>
         {state.error && (
