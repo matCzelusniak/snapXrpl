@@ -9,7 +9,7 @@ enum ConnectionStatusE {
   CONNECTED,
 }
 
-const DEFAULT_ADDRESS = 'wss://s.altnet.rippletest.net:51233';
+const DEFAULT_ADDRESS = 'wss://s.devnet.rippletest.net:51233';
 class Client {
   private static messageId = 1;
 
@@ -50,11 +50,12 @@ class Client {
               accountsSlice.find((element, index, array) => {
                 if (element.classicAddress === accountReceived) {
                   array[index].balance = parsedData.result.account_data.Balance;
+                  array[index].sequence =
+                    parsedData.result.account_data.Sequence;
                   return true;
                 }
                 return false;
               });
-
               this.mStore.dispatch({
                 type: 'SET_ACCOUNTS',
                 payload: accountsSlice,
@@ -132,7 +133,7 @@ class Client {
 
   public async submitTx(txHex: string) {
     const request = {
-      id: 'example_submit',
+      id: 'submit1',
       command: 'submit',
       tx_blob: txHex,
     };

@@ -38,7 +38,11 @@ export default function AddressList(props: { accounts: string[] }) {
   };
 
   //todo matCzelusniak move logic outside component
-  const handleSubmitTx = async (accountSource: string) => {
+  const handleSubmitTx = async (
+    accountSource: string,
+    sequence: number,
+    value,
+  ) => {
     switch (transactionType) {
       case SEND_XRPL: {
         setOpen(false);
@@ -49,7 +53,7 @@ export default function AddressList(props: { accounts: string[] }) {
           Amount: amountToSend.toString(),
           Fee: '12',
           Flags: 2147483648,
-          Sequence: 32418809,
+          Sequence: sequence,
         };
         const signedTX = await signTransactionsOffline(tx);
         if (signedTX !== false) {
@@ -76,9 +80,9 @@ export default function AddressList(props: { accounts: string[] }) {
 
   return (
     <List sx={{ width: '100%', maxWidth: '360', bgcolor: 'bla' }}>
-      {props.accounts.map((value) => (
+      {props.accounts.map((val) => (
         <ListItem
-          key={value.classicAddress}
+          key={val.classicAddress}
           disableGutters={false}
           sx={{ height: 30 }}
           secondaryAction={
@@ -144,7 +148,7 @@ export default function AddressList(props: { accounts: string[] }) {
                   <Button onClick={handleClose}>Cancel</Button>
                   <Button
                     onClick={() => {
-                      handleSubmitTx(value.classicAddress);
+                      handleSubmitTx(val.classicAddress, val.sequence, val);
                     }}
                   >
                     Send
@@ -156,10 +160,10 @@ export default function AddressList(props: { accounts: string[] }) {
         >
           <ListItemText
             sx={{ fontSize: 25 }}
-            primary={`${value.classicAddress} balance: ${
-              value.balance === -1
+            primary={`${val.classicAddress} balance: ${
+              val.balance === -1
                 ? 'Account not activated. Send min 10XRP to account'
-                : value.balance
+                : val.balance
             }`}
           />
         </ListItem>

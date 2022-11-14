@@ -112,7 +112,9 @@ export const createXRPAccountBasedOnSeed = async (seed) => {
       defaultSnapOrigin,
       {
         method: 'createXRPAccountBasedOnSeed',
-        paramMethod: seed,
+        params: {
+          seed,
+        },
       },
     ],
   });
@@ -125,7 +127,7 @@ export const signTransactionsOffline = async (txMsg) => {
       defaultSnapOrigin,
       {
         method: 'signTransactionsOffline',
-        paramMethod: txMsg,
+        params: { txMsg },
       },
     ],
   });

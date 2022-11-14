@@ -77,7 +77,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
         params: [
           {
             prompt: 'XRP Ledger Account creation',
-            description: `Confirm that you want to upload XRP Ledger account based on seed ${request.paramMethod}`,
+            description: `Confirm that you want to upload XRP Ledger account based on seed ${request.params.seed}`,
             textAreaContent:
               'All data will be stored in your metamask in secure way. You can export it later.',
           },
@@ -85,19 +85,19 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       });
 
       if (resultCfm) {
-        const keys = generateWallet(request.paramMethod);
+        const keys = generateWallet(request.params.seed);
 
         const walletXrpl = new Wallet(
           keys.publicKey,
           keys.privateKey,
-          request.paramMethod,
+          request.params.seed,
         );
 
         await addAccount(walletXrpl, wallet);
         try {
           await notify(wallet, `Created ${walletXrpl.classicAddress}`);
         } catch (e) {
-          console.log('jajo notofication error', e);
+          console.log('notofication error', e);
         }
       }
 
@@ -115,7 +115,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
         params: [
           {
             prompt: 'XRP Ledger Transaction to cinfirm',
-            description: `Confirm that you want to transfer XRP to ${request.paramMethod.Destination}`,
+            description: `Confirm that you want to transfer XRP to ${request.params.txMsg.Destination}`,
             textAreaContent: 'Please confirm transaction or reject',
           },
         ],
@@ -124,7 +124,7 @@ export const onRpcRequest: OnRpcRequestHandler = async ({
       if (resultCfm) {
         const txSign = await signTransactionsOffline(
           wallet,
-          request.paramMethod,
+          request.params.txMsg,
         );
 
         return txSign;
