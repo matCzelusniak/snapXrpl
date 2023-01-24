@@ -1,3 +1,5 @@
+!!! Just one weekend project. Code is not so clean:)
+
 # Ripple snap MVP - use XRPL Ripple network via Metamask in SECURE and EASY way
 
 Project created with aim to solve problem of blockchain 'diversity'. XRPL with XRP token introduced due to likely suitability of adaptation as fast way of transfer 'money' in way from institutions to institution and institution <-> human beings as well.
